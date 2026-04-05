@@ -4,13 +4,16 @@
 
 **a. Initial design**
 
-- Briefly describe your initial UML design.
-- What classes did you include, and what responsibilities did you assign to each?
+- Briefly describe your initial UML design. What classes did you include, and what responsibilities did you assign to each?
+
+My initial UML design included 4 main classes, based off the suggested main components. They were Owner, Pet, Task, and Scheduler. The responsibitilty of the Owner was holding the information regarding the owner, so their name, contact info, and their pet names. The actions that the Owner could perform was adding a pet or removing one from their profile, and view tasks. The Scheduler hold the information of who owns it and the tasks on it. It can prefrom scheduling a task, accessing the tasks of the day, accessing the tasks of the day by pet, and remove a task from the schedule. The Task holds information regarding name of the task, the type of task it is, if its complete or not, the due date of the task, and the pet the task needs to be performend on. The Pet has information regarding the name of the pet, the type of pet it is and its breed, the age and weight of the pet, and who it's owner is. The Pet class holds the methods to get the profile of the pet and update the profile of the pet.
 
 **b. Design changes**
 
 - Did your design change during implementation?
 - If yes, describe at least one change and why you made it.
+
+    Yes, 
 
 ---
 
