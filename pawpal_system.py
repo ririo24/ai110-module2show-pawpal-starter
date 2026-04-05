@@ -15,11 +15,14 @@ class Pet:
 
     def get_profile(self) -> dict:
         """Return the pet's attributes as a dictionary."""
-        pass
+        return {"id": self.id, "name": self.name, "species": self.species,
+                "breed": self.breed, "age": self.age, "weight": self.weight}
 
     def update_profile(self, attrs: dict) -> None:
         """Update the pet's attributes from the provided dictionary."""
-        pass
+        for key, value in attrs.items():
+            if hasattr(self, key):
+                setattr(self, key, value)
 
 
 @dataclass
@@ -46,7 +49,7 @@ class Task:
 
     def reschedule(self, new_date: date) -> None:
         """Update the task's due date to the given date."""
-        pass
+        self.due_date = new_date
 
 
 class Scheduler:
@@ -56,11 +59,11 @@ class Scheduler:
 
     def schedule_task(self, task: Task) -> None:
         """Add a task to the scheduler's task list."""
-        pass
+        self.tasks.append(task)
 
     def get_todays_tasks(self) -> list[Task]:
         """Return all tasks whose due date is today."""
-        pass
+        return [t for t in self.tasks if t.due_date == date.today()]
 
     def get_tasks_by_pet(self, pet_id: str) -> list[Task]:
         """Return all tasks assigned to the given pet."""
@@ -68,7 +71,7 @@ class Scheduler:
 
     def remove_task(self, task_id: str) -> None:
         """Remove the task with the given ID from the task list."""
-        pass
+        self.tasks = [t for t in self.tasks if t.id != task_id]
 
     def remove_tasks_for_pet(self, pet_id: str) -> None:
         """Remove all tasks assigned to the given pet."""
@@ -86,7 +89,7 @@ class Owner:
 
     def add_pet(self, pet: Pet) -> None:
         """Add a pet to the owner's pet list."""
-        pass
+        self.pets.append(pet)
 
     def remove_pet(self, pet_id: str) -> None:
         """Remove a pet and all its associated tasks from the owner's records."""
