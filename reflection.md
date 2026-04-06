@@ -13,7 +13,7 @@ My initial UML design included 4 main classes, based off the suggested main comp
 - Did your design change during implementation?
 - If yes, describe at least one change and why you made it.
 
-    Yes, 
+    Yes. Previously, I had a function called view_tasks() for Owner, however, Claude said that it was slightly redundant since I have a function called get_todays_tasks() in Scheduler, which essentially performs the same function. Claude also suggested that instead of Task storing the pet's ID as a string, I should replace it with a direct reference to a Pet object so it can access all pet details immediately. When I had pet be a string, in order to get information about the pet, I would have to manually look it up elsewhere since there was no direct connetion between a task and its pet object, but now that Task.pet stores a Pet, that process is much simpler.
 
 ---
 
@@ -24,11 +24,14 @@ My initial UML design included 4 main classes, based off the suggested main comp
 - What constraints does your scheduler consider (for example: time, priority, preferences)?
 - How did you decide which constraints mattered most?
 
+    My scheduler considers constraints like time slot conflicts and task reoccurence. Time slot conflicts are tackled by not allowing two pending tasks being able to share the same due_date and time. Task reoccurence is handled that daily and weekly reoccuring events automatically generate the next occurrence once they are completed. Time was prioritized first because two appointments just physically can't happen at the same time regardless of pet, owner, or the task. Reoccurence came next in constraint importance because tasks like feeding and grooming are routine and having to reschedule them every day would defeat the purpose of a scheduler. Things like priority level or owner availability times are other constraints to be considered, I just thought that time conflicts and task reoccurence were good constraints to handle first.
+
 **b. Tradeoffs**
 
 - Describe one tradeoff your scheduler makes.
 - Why is that tradeoff reasonable for this scenario?
 
+    One tradeoff that my scheduler makes is that it warns of conficts but still adds the task to the schedule instead of blocking it completely. This means the scheduler will always accept a task even if a pet owner schedules a task like a grooming appointment and a vet checkup at the same time. Both tasks are added and simply a warning is returned. An alternative solution would be to throw an exception and force the user to pick a difference time before proceeding with scheduling. However, the warning is resonable for this scenario since the stakes are low and a pet owener might intentionally schedule overlapping tasks. A pet owner might want to take their dog on a quick walk before going to the vet and so the scheduler shouldn't stop that from happening. I think returning a warning is a good compromise since it allows the owner to put in tasks they have to complete, while also informing them of the scheduling conflict so they can make informed decisions. The tradeoff here is that the schedule can end up being conflicted but that isn't like a terrible risk since the user is aware of the conflict. 
 ---
 
 ## 3. AI Collaboration
