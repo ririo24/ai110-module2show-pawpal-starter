@@ -71,6 +71,3 @@ Filtering: Filtering filters tasks by status (pending, completed, or cancelled) 
 ### 📸 Demo
 
 <a href="/course_images/ai110/pawpal1.png" target="_blank"><img src='/course_images/ai110/pawpal1.png' title='PawPal App' width='' alt='PawPal App' class='center-block' /></a>
-<a href="/course_images/ai110/pawpal2.png" target="_blank"><img src='/course_images/ai110/pawpal2.png' title='PawPal App' width='' alt='PawPal App' class='center-block' /></a>
-<a href="/course_images/ai110/pawpal3.png" target="_blank"><img src='/course_images/ai110/pawpal3.png' title='PawPal App' width='' alt='PawPal App' class='center-block' /></a>
-<a href="/course_images/ai110/pawpal4.png" target="_blank"><img src='/course_images/ai110/pawpal4.png' title='PawPal App' width='' alt='PawPal App' class='center-block' /></a>
