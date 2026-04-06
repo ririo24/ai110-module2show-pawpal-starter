@@ -44,3 +44,4 @@ pip install -r requirements.txt
 
 
 ### Smarter Scheduling
+PawPal+ now includes some algorithms which make it more functional. PawPal+ can now sort, filter, detect conflicts, and handle recurring tasks. Tasks can be sorted by time using sort_by_time(), which uses a lambda function to sort strings in "HH:MM" format, which returns a chronologically ordered schedule. Tasks can also be filtered by status and pet name. PawPal+ also has conflict detection, schedule_task() checks if there are any existing pending tasks that overlap with any other task at the same date and time slot. If a collision is found, a warning is given to the user but the task is still added. These features help the scheduler/user to be better organized.
