@@ -80,7 +80,7 @@ Filtering: Filtering filters tasks by status (pending, completed, or cancelled) 
 
 ### 📸 Demo
 
-<a href="/course_images/ai110/pawpal1.png" target="_blank"><img src='/course_images/ai110/pawpal1.png' title='PawPal App' width='' alt='PawPal App' class='center-block' /></a>
-<a href="/course_images/ai110/pawpal2.png" target="_blank"><img src='/course_images/ai110/pawpal2.png' title='PawPal App' width='' alt='PawPal App' class='center-block' /></a>
-<a href="/course_images/ai110/pawpal3.png" target="_blank"><img src='/course_images/ai110/pawpal3.png' title='PawPal App' width='' alt='PawPal App' class='center-block' /></a>
-<a href="/course_images/ai110/pawpal4.png" target="_blank"><img src='/course_images/ai110/pawpal4.png' title='PawPal App' width='' alt='PawPal App' class='center-block' /></a>
+<a href="/course_images/ai110/pawpalChallenges1.png" target="_blank"><img src='/course_images/ai110/pawpalChallenges1.png' title='PawPal App' width='' alt='PawPal Owner Profile' class='center-block' /></a>
+<a href="/course_images/ai110/pawpalChallenges2.png" target="_blank"><img src='/course_images/ai110/pawpalChallenges2.png' title='PawPal App' width='' alt='PawPal Your Pets' class='center-block' /></a>
+<a href="/course_images/ai110/pawpalChallenges3.png" target="_blank"><img src='/course_images/ai110/pawpalChallenges3.png' title='PawPal App' width='' alt='PawPal Schedule a Task' class='center-block' /></a>
+<a href="/course_images/ai110/pawpalChallenges4.png" target="_blank"><img src='/course_images/ai110/pawpalChallenges4.png' title='PawPal App' width='' alt='PawPal Todays Tasks' class='center-block' /></a>

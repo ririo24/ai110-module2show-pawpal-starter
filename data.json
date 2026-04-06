@@ -1,0 +1,52 @@
+{
+  "id": "390d31d2-de79-4f17-b35b-5d0cb7b310b7",
+  "name": "",
+  "email": "",
+  "phone": "",
+  "pets": [
+    {
+      "id": "eb7cb23d-9f10-4d8b-b928-152090dc4788",
+      "name": "Muffins",
+      "species": "cat",
+      "breed": "Sphynx",
+      "age": 6,
+      "weight": 4.900000000000002,
+      "owner_id": "390d31d2-de79-4f17-b35b-5d0cb7b310b7"
+    },
+    {
+      "id": "37721c34-806f-43f2-b721-d8dc9cea87a5",
+      "name": "Luna",
+      "species": "dog",
+      "breed": "German Sheperd",
+      "age": 3,
+      "weight": 4.950000000000001,
+      "owner_id": "390d31d2-de79-4f17-b35b-5d0cb7b310b7"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "c14b9613-e167-401c-9c43-d8219aa2bb42",
+      "title": "Dinner",
+      "task_type": "feeding",
+      "status": "pending",
+      "due_date": "2026-04-06",
+      "pet_id": "eb7cb23d-9f10-4d8b-b928-152090dc4788",
+      "description": "",
+      "time": "19:00",
+      "recurrence": null,
+      "priority": "Medium"
+    },
+    {
+      "id": "53959c01-0acf-49f1-a8c4-1d34eecfbfc5",
+      "title": "Vet Check Up",
+      "task_type": "vet",
+      "status": "pending",
+      "due_date": "2026-04-06",
+      "pet_id": "37721c34-806f-43f2-b721-d8dc9cea87a5",
+      "description": "",
+      "time": "14:00",
+      "recurrence": null,
+      "priority": "Medium"
+    }
+  ]
+}
