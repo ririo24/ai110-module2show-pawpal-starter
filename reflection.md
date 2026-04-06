@@ -75,3 +75,12 @@ My initial UML design included 4 main classes, based off the suggested main comp
 **c. Key takeaway**
 
 - What is one important thing you learned about designing systems or working with AI on this project?
+
+
+
+
+Reflect on AI Strategy: Specifically describe your experience with VS Code Copilot:
+Which Copilot features were most effective for building your scheduler?
+Give one example of an AI suggestion you rejected or modified to keep your system design clean.
+How did using separate chat sessions for different phases help you stay organized?
+Summarize what you learned about being the "lead architect" when collaborating with powerful AI tools.

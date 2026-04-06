@@ -52,14 +52,16 @@ with st.form("add_pet_form"):
             weight=float(pet_weight),
             owner_id=owner.id,
         )
-        owner.add_pet(new_pet)          # calls the method we implemented
+        owner.add_pet(new_pet)
         st.success(f"{new_pet.name} added!")
 
-# Show current pets
+# Show current pets as a table
 if owner.pets:
     st.markdown("**Your pets:**")
-    for pet in owner.pets:
-        st.write(f"- {pet.name} ({pet.species}, {pet.breed}, age {pet.age})")
+    st.table([
+        {"Name": p.name, "Species": p.species, "Breed": p.breed, "Age": p.age, "Weight (kg)": p.weight}
+        for p in owner.pets
+    ])
 else:
     st.info("No pets yet. Add one above.")
 
@@ -80,6 +82,8 @@ else:
         task_type     = st.selectbox("Task type", ["walk", "feeding", "vet", "grooming"])
         task_desc     = st.text_input("Notes", value="")
         task_date     = st.date_input("Due date", value=date.today())
+        task_time     = st.text_input("Time (HH:MM)", value="09:00")
+        task_recur    = st.selectbox("Repeat", ["none", "daily", "weekly"])
 
         if st.form_submit_button("Schedule task"):
             selected_pet = pet_options[selected_pet_name]
@@ -91,27 +95,69 @@ else:
                 due_date=task_date,
                 pet=selected_pet,
                 description=task_desc,
+                time=task_time,
+                recurrence=None if task_recur == "none" else task_recur,
             )
-            owner.scheduler.schedule_task(new_task)   # calls the method we implemented
-            st.success(f"Task '{new_task.title}' scheduled for {selected_pet.name}!")
+            warning = owner.scheduler.schedule_task(new_task)
+            st.success(f"'{new_task.title}' scheduled for {selected_pet.name} on {task_date} at {task_time}.")
+            if warning:
+                st.warning(
+                    f"**Time conflict detected.**  \n"
+                    f"'{new_task.title}' is scheduled at the same time as another pending task.  \n"
+                    f"Check the **Scheduling Conflicts** section below to review and resolve it."
+                )
 
 st.divider()
 
 # ----------------------------------------------------------------
-# SECTION 4: Today's Schedule  →  calls owner.scheduler.get_todays_tasks()
+# SECTION 4: Today's Schedule  →  sorted by time via sort_by_time()
 # ----------------------------------------------------------------
 st.subheader("Today's Schedule")
 
-todays_tasks = owner.scheduler.get_todays_tasks()
+todays_tasks = [t for t in owner.scheduler.sort_by_time() if t.due_date == date.today()]
 
 if todays_tasks:
-    for task in todays_tasks:
-        col1, col2 = st.columns([3, 1])
-        with col1:
-            st.markdown(f"**{task.title}** — {task.pet.name} ({task.task_type})")
-            if task.description:
-                st.caption(task.description)
-        with col2:
-            st.markdown(f"`{task.status.upper()}`")
+    STATUS_BADGE = {"pending": "🟡 Pending", "completed": "✅ Completed", "cancelled": "❌ Cancelled"}
+    TYPE_ICON    = {"walk": "🦮", "feeding": "🍖", "vet": "🏥", "grooming": "✂️"}
+
+    st.table([
+        {
+            "Time":   task.time,
+            "Task":   f"{TYPE_ICON.get(task.task_type, '')} {task.title}",
+            "Pet":    task.pet.name,
+            "Type":   task.task_type.capitalize(),
+            "Status": STATUS_BADGE.get(task.status, task.status),
+            "Notes":  task.description or "—",
+        }
+        for task in todays_tasks
+    ])
 else:
     st.info("No tasks scheduled for today.")
+
+st.divider()
+
+# ----------------------------------------------------------------
+# SECTION 5: Conflict Warnings  →  calls owner.scheduler.get_conflicts()
+# ----------------------------------------------------------------
+st.subheader("Scheduling Conflicts")
+
+conflicts = owner.scheduler.get_conflicts()
+
+if conflicts:
+    st.warning(
+        f"**{len(conflicts)} conflict{'s' if len(conflicts) != 1 else ''} found.**  \n"
+        "These tasks overlap in time. Reschedule one to avoid missed care."
+    )
+    st.table([
+        {
+            "Time":       a.time,
+            "Date":       str(a.due_date),
+            "Task A":     a.title,
+            "Pet A":      a.pet.name,
+            "Task B":     b.title,
+            "Pet B":      b.pet.name,
+        }
+        for a, b in conflicts
+    ])
+else:
+    st.success("No conflicts — your schedule is clear!")
