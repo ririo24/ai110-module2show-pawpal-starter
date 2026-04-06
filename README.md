@@ -49,12 +49,17 @@ PawPal+ now includes some algorithms which make it more functional. PawPal+ can 
 
 ### Testing PawPal+
 Command to run tests: python -m pytest
+
 I use: python3 -m pytest
 
 The tests/test_pawpal.py file tests sorting correctness, reoccurence logic, conflict detection, and filtering. 
+
 The sorting tests test that tasks get returned in chronological order regardless of the order they get inserted in, that the original list doesn't get changed, and that edge cases like emplty or single-item schedules don't break.
+
 Reoccurence logic tests verify that completing a, daily or weekly, task creates a task due the subsiquent day or week. It also make sure that that task also inherits all the information from that completed task. Reoccurence logic tests also make sure that tasks that don't reoccur don't accidentally produce subsiquent tasks, and that invalid inputs raise errors.
+
 Conflict Detection tests check that two pending tasks at the same time and due date throw a warning, and that completed or cancelled tasks don't block time slots. They also double check that the same time on different dates don't cause issues and that resolving one task stops a conflict. 
+
 Filtering tests confim that when selecting to filter via one type of status, only tasks with a matching status get displayed. They also check the happy path that pet names aren't case-sensitive.
 
 A confidence level I would give for the system's reliability based on test results is probably a 4 out of 5 stars. I think that having many happy paths and edge cases covered in test_pawpal.py helps ensure that the program is dependable. But I am sure that there are some edge cases that I missed so I wouldn't want to say with full certainty that this system is 100% reliable. But I do think with all the sorting, reocurrence logic, and conflict detection, and all the tests to ensure that all the logic works, does make me feel decently confident that this system is fairly reliable.
@@ -62,12 +67,20 @@ A confidence level I would give for the system's reliability based on test resul
 
 ### Features
 Pet Management: A user can add pets with profile details like name, species, breed, age, weight. A user can also update any pet profile attribute and remove a pet. 
+
 Task Scheduling: A user can schedule tasks with a title, type, date, time, and optional notes. Task types include: walk, feeding, vet, and grooming. Tasks can always be added even if conflicts occur.
+
 Sorting: Tasks are sorted in chronological order, the original task list order is preserved, and today's schedule is displayed in an earliest to latest manner.
+
 Conflict Detection: A warning is given when two pending tasks share the same time and date. Get_conflicts returns all the pending overlapping tasks. Completed and cancelled tasks aren't included in conflict tests/checks.
+
 Recurrence: Tasks can be repeat daily or weekly. Completing a recurring task automatically schedules the next occurrence with all the same information. 
+
 Filtering: Filtering filters tasks by status (pending, completed, or cancelled) and by pet-name.
 
 ### 📸 Demo
 
 <a href="/course_images/ai110/pawpal1.png" target="_blank"><img src='/course_images/ai110/pawpal1.png' title='PawPal App' width='' alt='PawPal App' class='center-block' /></a>
+<a href="/course_images/ai110/pawpal2.png" target="_blank"><img src='/course_images/ai110/pawpal2.png' title='PawPal App' width='' alt='PawPal App' class='center-block' /></a>
+<a href="/course_images/ai110/pawpal3.png" target="_blank"><img src='/course_images/ai110/pawpal3.png' title='PawPal App' width='' alt='PawPal App' class='center-block' /></a>
+<a href="/course_images/ai110/pawpal4.png" target="_blank"><img src='/course_images/ai110/pawpal4.png' title='PawPal App' width='' alt='PawPal App' class='center-block' /></a>
