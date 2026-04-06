@@ -96,7 +96,7 @@ There are quite a few things I would improve upon, one of them being, I would wa
 
 One important thing I learned about designing systems with the help of AI is that AI is most useful when I am super specific about what I want it to help me with and when I really understand my system well enough to evaluate what it suggests. Early on in the project, I realized that when I gave Claude broad prompts, it produced generic outputs, but once I started giving it specific prompts, I was able to get better outputs from it. Also, just being able to really understand my program really helps me in knowing which of Claude's suggestions I should accept or reject.
 
-
-
 ## Challenge 5
 I compared Claude with Copilot. Here is the prompt I gave each of them: "Based on the current files of this program, provide the logic for rescheduling weekly tasks. Do not implement it in my program, but show me the solution." Both soltutions filter the same set of tasks, pending and weekly, and put the date change into task.reschedule(). However, the Copilot's solution is more Pythonic. Claude's solution takes a date and moves each task's weekday relative to a new week. Its solution is more flexible but more complex. Copilot's solution is simple since it simply adds 7 days to each task's current date, which makes it pretty straightforward and predictable. Copilot's solution is more Pythonic since it really has one sole function with no extra parameters or math and is easier to read and test.
+
+#### Completed Challenges 2-5
