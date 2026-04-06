@@ -7,9 +7,9 @@ st.set_page_config(page_title="PawPal+", page_icon="🐾", layout="centered")
 
 st.title("🐾 PawPal+")
 
-# --- Persist Owner in session_state so it survives re-runs ---
+# --- Persist Owner in session_state; load from data.json on first run ---
 if "owner" not in st.session_state:
-    st.session_state.owner = Owner(id=str(uuid.uuid4()), name="", email="", phone="")
+    st.session_state.owner = Owner.load_from_json()
 
 owner: Owner = st.session_state.owner
 
@@ -26,6 +26,7 @@ with st.form("owner_form"):
         owner.name  = owner_name
         owner.email = owner_email
         owner.phone = owner_phone
+        owner.save_to_json()
         st.success(f"Profile saved for {owner.name}!")
 
 st.divider()
@@ -53,6 +54,7 @@ with st.form("add_pet_form"):
             owner_id=owner.id,
         )
         owner.add_pet(new_pet)
+        owner.save_to_json()
         st.success(f"{new_pet.name} added!")
 
 # Show current pets as a table
@@ -99,6 +101,7 @@ else:
                 recurrence=None if task_recur == "none" else task_recur,
             )
             warning = owner.scheduler.schedule_task(new_task)
+            owner.save_to_json()
             st.success(f"'{new_task.title}' scheduled for {selected_pet.name} on {task_date} at {task_time}.")
             if warning:
                 st.warning(

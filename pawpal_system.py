@@ -2,6 +2,8 @@ from dataclasses import dataclass, field
 from datetime import date, timedelta
 from typing import Optional
 import uuid
+import json
+import os
 
 
 @dataclass
@@ -18,6 +20,15 @@ class Pet:
         """Return the pet's attributes as a dictionary."""
         return {"id": self.id, "name": self.name, "species": self.species,
                 "breed": self.breed, "age": self.age, "weight": self.weight}
+
+    def to_dict(self) -> dict:
+        return {"id": self.id, "name": self.name, "species": self.species,
+                "breed": self.breed, "age": self.age, "weight": self.weight,
+                "owner_id": self.owner_id}
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "Pet":
+        return cls(**data)
 
     def update_profile(self, attrs: dict) -> None:
         """Update the pet's attributes from the provided dictionary."""
@@ -53,6 +64,33 @@ class Task:
     def reschedule(self, new_date: date) -> None:
         """Update the task's due date to the given date."""
         self.due_date = new_date
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "title": self.title,
+            "task_type": self.task_type,
+            "status": self.status,
+            "due_date": self.due_date.isoformat(),
+            "pet_id": self.pet.id,
+            "description": self.description,
+            "time": self.time,
+            "recurrence": self.recurrence,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict, pets_by_id: dict) -> "Task":
+        return cls(
+            id=data["id"],
+            title=data["title"],
+            task_type=data["task_type"],
+            status=data["status"],
+            due_date=date.fromisoformat(data["due_date"]),
+            pet=pets_by_id[data["pet_id"]],
+            description=data.get("description", ""),
+            time=data.get("time", "00:00"),
+            recurrence=data.get("recurrence"),
+        )
 
 
 class Scheduler:
@@ -221,3 +259,46 @@ class Owner:
 
     # view_tasks() removed — use owner.scheduler.get_todays_tasks() directly
     # to avoid a redundant wrapper with an ambiguous contract
+
+    def save_to_json(self, path: str = "data.json") -> None:
+        """Serialize the owner, their pets, and all scheduled tasks to a JSON file."""
+        data = {
+            "id": self.id,
+            "name": self.name,
+            "email": self.email,
+            "phone": self.phone,
+            "pets": [p.to_dict() for p in self.pets],
+            "tasks": [t.to_dict() for t in self.scheduler.tasks],
+        }
+        with open(path, "w") as f:
+            json.dump(data, f, indent=2)
+
+    @classmethod
+    def load_from_json(cls, path: str = "data.json") -> "Owner":
+        """Load an Owner (with pets and tasks) from a JSON file.
+
+        Returns a fresh Owner if the file does not exist or is malformed.
+        """
+        if not os.path.exists(path):
+            return cls(id=str(uuid.uuid4()), name="", email="", phone="")
+        try:
+            with open(path) as f:
+                data = json.load(f)
+            owner = cls(
+                id=data["id"],
+                name=data.get("name", ""),
+                email=data.get("email", ""),
+                phone=data.get("phone", ""),
+            )
+            pets_by_id = {}
+            for pet_data in data.get("pets", []):
+                pet = Pet.from_dict(pet_data)
+                owner.pets.append(pet)
+                pets_by_id[pet.id] = pet
+            for task_data in data.get("tasks", []):
+                if task_data["pet_id"] in pets_by_id:
+                    task = Task.from_dict(task_data, pets_by_id)
+                    owner.scheduler.tasks.append(task)
+            return owner
+        except (KeyError, ValueError, json.JSONDecodeError):
+            return cls(id=str(uuid.uuid4()), name="", email="", phone="")
