@@ -48,6 +48,7 @@ class Task:
     description: str = ""
     time: str = "00:00"          # "HH:MM" format
     recurrence: Optional[str] = None  # "daily", "weekly", or None
+    priority: str = "Medium"     # "Low", "Medium", or "High"
 
     def complete(self) -> None:
         """Mark the task as completed; raises ValueError if already cancelled."""
@@ -76,6 +77,7 @@ class Task:
             "description": self.description,
             "time": self.time,
             "recurrence": self.recurrence,
+            "priority": self.priority,
         }
 
     @classmethod
@@ -90,6 +92,7 @@ class Task:
             description=data.get("description", ""),
             time=data.get("time", "00:00"),
             recurrence=data.get("recurrence"),
+            priority=data.get("priority", "Medium"),
         )
 
 
@@ -156,17 +159,22 @@ class Scheduler:
         """Remove all tasks assigned to the given pet."""
         self.tasks = [t for t in self.tasks if t.pet.id != pet_id]
 
-    def sort_by_time(self) -> list[Task]:
-        """Return all tasks sorted by their time attribute in ascending order.
+    _PRIORITY_ORDER = {"High": 0, "Medium": 1, "Low": 2}
 
-        Relies on lexicographic string comparison of "HH:MM" formatted strings,
-        which naturally preserves chronological order when hours and minutes are
-        zero-padded. Does not modify the underlying task list.
+    def sort_by_time(self) -> list[Task]:
+        """Return all tasks sorted by priority (High → Medium → Low) then time.
+
+        Within the same priority level, tasks are ordered chronologically using
+        lexicographic comparison of zero-padded "HH:MM" strings. Does not modify
+        the underlying task list.
 
         Returns:
-            A new list of all Task objects ordered from earliest to latest time.
+            A new list of all Task objects ordered by priority then time.
         """
-        return sorted(self.tasks, key=lambda task: task.time)
+        return sorted(
+            self.tasks,
+            key=lambda task: (self._PRIORITY_ORDER.get(task.priority, 1), task.time),
+        )
 
     def complete_task(self, task_id: str) -> Optional[Task]:
         """Mark a task as completed and, if it recurs, schedule the next occurrence.
@@ -211,6 +219,7 @@ class Scheduler:
             description=task.description,
             time=task.time,
             recurrence=task.recurrence,
+            priority=task.priority,
         )
         self.schedule_task(next_task)
         return next_task
