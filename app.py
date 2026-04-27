@@ -1,8 +1,16 @@
 import streamlit as st
 from datetime import date
 import uuid
+import os
 import pandas as pd
 from pawpal_system import Owner, Pet, Task
+
+# Load .env file if present (optional convenience for local dev)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 
 st.set_page_config(page_title="PawPal+", page_icon="🐾", layout="centered")
 
@@ -242,3 +250,96 @@ if conflicts:
     )
 else:
     st.success("✅ No conflicts — your schedule is clear!")
+
+st.divider()
+
+# ── SECTION 7: AI Pet Care Advisor ────────────────────────────────────────────
+
+_AI_THRESHOLD = 3.5   # mirrors ai_advisor.RELIABILITY_THRESHOLD
+
+st.subheader("🤖 AI Pet Care Advisor")
+st.caption(
+    "Ask Claude for personalised care tips. "
+    "Every response is automatically scored on **safety**, **completeness**, and **relevance** "
+    "before you see it — low-scoring advice is regenerated once before being shown."
+)
+
+if not owner.pets:
+    st.info("Add a pet first to use the AI advisor.")
+else:
+    ai_pet_name = st.selectbox(
+        "Choose a pet for advice",
+        [p.name for p in owner.pets],
+        key="ai_pet_select",
+    )
+    selected_ai_pet = next(p for p in owner.pets if p.name == ai_pet_name)
+    pet_tasks = owner.scheduler.get_tasks_by_pet(selected_ai_pet.id)
+
+    if st.button("✨ Get AI Care Advice", type="primary"):
+        # Clear any cached result for this pet so a fresh call is always made
+        st.session_state.pop("ai_result", None)
+        st.session_state.pop("ai_error", None)
+
+        api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+        if not api_key:
+            st.session_state["ai_error"] = (
+                "ANTHROPIC_API_KEY is not set. "
+                "Add it to a `.env` file in the project folder or export it in your shell, "
+                "then restart the app."
+            )
+        else:
+            with st.spinner("Generating and scoring advice…"):
+                try:
+                    from ai_advisor import PetCareAdvisor
+                    advisor = PetCareAdvisor()
+                    result = advisor.get_reliable_advice(selected_ai_pet, pet_tasks)
+                    st.session_state["ai_result"] = result
+                except ValueError as exc:
+                    st.session_state["ai_error"] = str(exc)
+                except Exception as exc:
+                    st.session_state["ai_error"] = (
+                        f"AI advisor encountered an error: {exc}\n\n"
+                        "Check pawpal_ai.log for details."
+                    )
+
+    # ── Display cached result ─────────────────────────────────────────────────
+    if "ai_error" in st.session_state:
+        st.error(st.session_state["ai_error"])
+
+    if "ai_result" in st.session_state:
+        result = st.session_state["ai_result"]
+        c = result.critique
+        score = c.overall_score
+
+        # Reliability badge
+        if score >= 4.0:
+            badge_color, badge_label = "green",  "High reliability"
+        elif score >= _AI_THRESHOLD:
+            badge_color, badge_label = "orange", "Acceptable reliability"
+        else:
+            badge_color, badge_label = "red",    "Low reliability (best effort)"
+
+        st.markdown(
+            f"**Reliability:** "
+            f"<span style='color:{badge_color}; font-weight:bold;'>"
+            f"{score:.2f} / 5.00 — {badge_label}</span>",
+            unsafe_allow_html=True,
+        )
+        if result.attempts > 1:
+            st.caption(f"ℹ️ First draft scored below threshold — this is the regenerated version.")
+
+        st.markdown("---")
+        st.markdown(result.advice)
+        st.markdown("---")
+
+        with st.expander("📊 How was this scored?"):
+            col1, col2, col3 = st.columns(3)
+            col1.metric("Safety",       f"{c.safety_score:.1f} / 5")
+            col2.metric("Completeness", f"{c.completeness_score:.1f} / 5")
+            col3.metric("Relevance",    f"{c.relevance_score:.1f} / 5")
+            st.caption(f"**Critic's note:** {c.feedback}")
+            st.caption(
+                f"Threshold: {_AI_THRESHOLD} · "
+                f"Attempts used: {result.attempts} · "
+                f"All activity logged to `pawpal_ai.log`"
+            )

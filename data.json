@@ -21,6 +21,15 @@
       "age": 3,
       "weight": 4.950000000000001,
       "owner_id": "390d31d2-de79-4f17-b35b-5d0cb7b310b7"
+    },
+    {
+      "id": "97e0f51a-02d9-4849-bdc1-036964e4119b",
+      "name": "Mochi",
+      "species": "dog",
+      "breed": "Mixed",
+      "age": 1,
+      "weight": 5.0,
+      "owner_id": "390d31d2-de79-4f17-b35b-5d0cb7b310b7"
     }
   ],
   "tasks": [
@@ -45,6 +54,18 @@
       "pet_id": "37721c34-806f-43f2-b721-d8dc9cea87a5",
       "description": "",
       "time": "14:00",
+      "recurrence": null,
+      "priority": "Medium"
+    },
+    {
+      "id": "71c3ac84-c40b-4865-91f7-1acc6069ecad",
+      "title": "Morning walk",
+      "task_type": "walk",
+      "status": "pending",
+      "due_date": "2026-04-25",
+      "pet_id": "eb7cb23d-9f10-4d8b-b928-152090dc4788",
+      "description": "",
+      "time": "09:00",
       "recurrence": null,
       "priority": "Medium"
     }

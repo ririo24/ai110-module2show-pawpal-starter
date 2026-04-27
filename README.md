@@ -28,8 +28,42 @@ Your final app should:
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
+```
+
+Set your Anthropic API key so the AI advisor can run:
+
+```bash
+cp .env.example .env
+# open .env and replace "your_api_key_here" with your real key
+```
+
+Or export it directly in your shell:
+
+```bash
+export ANTHROPIC_API_KEY=sk-ant-...
+```
+
+### Run the app
+
+```bash
+streamlit run app.py
+```
+
+### Run the AI evaluation harness
+
+```bash
+python evaluate_ai.py
+```
+
+This tests the advisor on 4 predefined pet profiles and prints a scored summary table.
+
+### Run the unit tests
+
+```bash
+python -m pytest
+# or: python3 -m pytest
 ```
 
 ### Suggested workflow
